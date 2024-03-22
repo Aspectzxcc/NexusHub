@@ -1,0 +1,81 @@
+<%- include('partials/logo.ejs') %>
+
+<div class="content-container dashed-black-container container-margin">
+  <div class="directory-bar">
+    <a href="/">NexusHub Forum</a> 
+    <span>&gt;</span>
+    <a href="<%= user.href %>"><%= user.username %></a>
+  </div>
+
+  <div class="profile-container post-container-template">
+    <div class="profile-header topic-header">
+      Profile Summary
+    </div>
+    <div class="profile-area">
+      <div class="profile-left">
+        <div class="profile-name">
+          <%= user.username %>
+        </div>
+        <div class="profile-role <%= user.role.toLowerCase().replace(" ", "-") %>">
+          <%= user.role %>
+        </div>
+        <div class="profile-icon">
+          <img id="profileImage" src="<%= user.profilePicture %>" alt="profile picture">
+          <button id="cancelUpdate" class="button-style" type="button" style="display: none;">X</button>
+        </div>
+        <% if(loggedIn && user.id === userLoggedIn.id) { %>
+          <form id="updatePictureForm" enctype="multipart/form-data">
+            <input id="profilePictureInput" type="file" name="image">
+            <label for="profilePictureInput" class="button-style file-choose-button" style="margin-top: 20px;">Choose Picture</label>
+            <button class="button-style update-button" type="submit" style="display: none;">Confirm</button>
+          </form>
+        <% } %>
+        <div style="margin-top: 20px; width: 50%;">
+          <a id="showPosts" class="button-style" href="/user/posts=<%= user.id %>">Show Posts</a>
+        </div>
+        <div style="margin-top: 20px; width: 50%;">
+          <a id="showPosts" class="button-style" href="/user/replies=<%= user.id %>">Show Replies</a>
+        </div>
+      </div>
+      <div class="profile-right">
+        <div class="edit-profile-container">
+          <% if(loggedIn && user.id === userLoggedIn.id) { %>
+            <a href="/user/update=<%= user.id %>"><button class="edit-profile-button">Update Profile</button></a>
+          <% } %>
+        </div>
+        <div class="profile-block">
+          <dl class="profile-info">
+            <dt>Posts:</dt>
+            <dd><%= user.postCount %></dd>
+          </dl>
+          <% if (loggedIn && user.id === userLoggedIn.id) { %>
+            <dl class="profile-info">
+              <dt>Email:</dt>
+              <dd><%= user.email %></dd>
+            </dl>
+          <% } %>
+          <dl class="profile-info">
+            <dt>Age:</dt>
+            <dd><%= user.age %></dd>
+          </dl>
+        </div>
+        <div>
+          <dl class="profile-info">
+            <dt>Join Date:</dt>
+            <dd><%= user.createdAtSGT %></dd>
+          </dl>
+          <dl class="profile-info">
+            <dt>Current Server:</dt>
+            <dd><%= user.currentServer %></dd>
+          </dl>
+          <dl class="profile-info">
+            <dt>Short Description:</dt>
+            <dd><%= user.description %></dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/updateProfilePicture.js"></script>

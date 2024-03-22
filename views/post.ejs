@@ -1,0 +1,278 @@
+<%- include('partials/logo.ejs') %>
+
+<div class="content-container dashed-black-container container-margin">
+    <div class="directory-bar">
+        <a href="/">NexusHub Forum</a> 
+        <span>&gt;</span>
+        <a href="/#<%= post.refBoard.category.id %>"><%= post.refBoard.category.title %></a>
+        <span>&gt;</span>
+        <a href="<%= post.refBoard.href %>"><%= post.refBoard.title %></a>
+        <span>&gt;</span>
+        <a href="<%= post.href %>"><%= post.title %></a>
+    </div>
+    
+    <div class="title-header post-container-template">
+        <div class="post-title topic-header">
+            <%= post.title %>
+        </div>
+        <p>
+            <br>Started by <a href="<%= post.poster.href %>"><%= post.poster.username %></a>, <%= post.createdAtSGT %>
+        </p>
+    </div>
+    <div class="post-section-top">
+        <div class="left-side-buttons">
+            <a href="#bot" id="top" class="down-arrow-container">
+                <svg class="down-arrow-svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 12l-1.41-1.41L13 16.17V3.83h-2v12.34l-5.59-5.58L4 12l8 8 8-8z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Go Down
+            </a>
+            <%- include('partials/postPagination.ejs') %>
+        </div>
+        <div class="right-side-buttons">
+            <% if (loggedIn) { %>
+                <a href="#bot" class="reply-button reply-button-container" style="text-decoration: none;">
+                <svg class="reply-arrow-svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 17V15.8C20 14.1198 20 13.2798 19.673 12.638C19.3854 12.0735 18.9265 11.6146 18.362 11.327C17.7202 11 16.8802 11 15.2 11H4M4 11L8 7M4 11L8 15" stroke="#FF1493" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Reply
+                </a>
+            <% } %>
+        </div>
+    </div>
+
+     <% if (page === 1) { %>
+        <div class="post-section post-container-template" data-id="<%= post.id %>">
+            <div class="poster-info">
+                <div class="poster-name">
+                    <strong><a href="<%= post.poster.href %>"><%= post.poster.username %></a></strong>
+                </div>
+                <div class="poster-role <%= post.poster.roleClass %>">
+                   <%= post.poster.role %>
+                </div>
+                <div class="poster-icon">
+                    <img id="profileImage" src="<%= post.poster.profilePicture %>" alt="profile picture">
+                </div>
+                <div class="poster-join-date">
+                    Join Date: <%= post.poster.joinDateMonth %>
+                </div>
+                <div class="poster-posts">
+                    Posts: <%= post.poster.postCount %>
+                </div>
+            </div>
+            <div class="post-area">
+                <div class="post-info">
+                    <div class="post-info-top">
+                        <div class="post-name">
+                        <a href="<%= post.href %>"><strong><%= post.title %></strong></a>
+                        </div>
+                        <div class="vote-container">
+                            <% if (loggedIn) { %>
+                                <% const postId = post._id.toString(); %>
+                                <% let isUpvoted = false; %>
+                                <% let isDownvoted = false; %>
+                                <% userLoggedIn.upvoted.forEach(vote => { %>
+                                    <% if (vote.itemType === 'Post' && vote.item.toString() === postId ) { %>
+                                        <% isUpvoted = true; %>
+                                        
+                                    <% } %>
+                                <% }); %>
+                                <% userLoggedIn.downvoted.forEach(vote => { %>
+                                    <% if (vote.itemType === 'Post' && vote.item.toString() === postId ) { %>
+                                        <% isDownvoted = true; %>
+                                        
+                                    <% } %>
+                                <% }); %>
+                                <button class="upvote-btn <%= isUpvoted ? 'active' : '' %>">Upvote</button>
+                                <p class="vote-count"><%= post.upvotes %></p>
+                                <button class="downvote-btn <%= isDownvoted ? 'active' : '' %>">Downvote</button>
+                            <% } else { %>
+                                <button class="upvote-btn" disabled>Upvote</button>
+                                <p class="vote-count"><%= post.upvotes %></p>
+                                <button class="downvote-btn" disabled>Downvote</button>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="post-info-bottom">
+                        <div class="post-date">
+                            <%= post.createdAtSGT %>
+                        </div>
+                        <div class="post-edited">
+                            <% if (post.edited) { %>
+                            Last Edit: <%= post.updatedAtSGT %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <%- post.content %>
+                </div>
+                <div class="post-content-footer">
+                    <% if (loggedIn) { %>
+                        <% if (post.poster.id.toString() === userLoggedIn.id.toString()) { %>
+                            <button class="edit-button">Edit</button>
+                            <button class="delete-button">Delete</button>
+                        <% } %>
+                        <% if (post.poster.id.toString() !== userLoggedIn.id.toString()) { %>
+                            <button class="report-button">
+                                <svg class="report-icon"xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="red" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v6h-2zm0 8h2v2h-2z"/>
+                                </svg> Report
+                            </button>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <% for(const reply of replies) { %>
+        <div class="reply-section post-section post-container-template" data-id="<%= reply.id %>" data-index="<%= page === 1 ? replies.indexOf(reply) + 2: replies.indexOf(reply) + 1 %>">
+            <div class="poster-info">
+                <div class="poster-name">
+                    <strong><a href="<%= reply.poster.href %>"><%= reply.poster.username %></a></strong>
+                </div>
+                <div class="poster-role <%= reply.poster.roleClass %>">
+                    <%= reply.poster.role %>
+                </div>
+                <div class="poster-icon">
+                    <img id="profileImage" src="<%= reply.poster.profilePicture %>" alt="profile picture">
+                </div>
+                <div class="poster-join-date">
+                    Join Date: <%= reply.poster.joinDateMonth %>
+                </div>
+                <div class="poster-posts">
+                    Posts: <%= reply.poster.postCount %>
+                </div>
+            </div>
+            <div class="post-area">
+                <div class="post-info">
+                    <div class="post-info-top">
+                        <div id="<%= reply.id %>" class="post-name">
+                            <a href="<%= page !== 1 ? post.href + '?page=' + page : post.href %>#<%= reply.id %>">
+                            <strong><%= reply.title %></strong>
+                        </a>
+                        </div>
+                        <div class="vote-container">
+                            <% if (loggedIn) { %>
+                                <% const replyId = reply._id.toString(); %>
+                                <% let isUpvoted = false; %>
+                                <% let isDownvoted = false; %>
+                                <% userLoggedIn.upvoted.forEach(vote => { %>
+                                    <% if (vote.itemType === 'Reply' && vote.item.toString() === replyId ) { %>
+                                        <% isUpvoted = true; %>
+                                        
+                                    <% } %>
+                                <% }); %>
+                                <% userLoggedIn.downvoted.forEach(vote => { %>
+                                    <% if (vote.itemType === 'Reply' && vote.item.toString() === replyId ) { %>
+                                        <% isDownvoted = true; %>
+                                        
+                                    <% } %>
+                                <% }); %>
+                                <button class="upvote-btn <%= isUpvoted ? 'active' : '' %>">Upvote</button>
+                                <p class="vote-count"><%= reply.upvotes %></p>
+                                <button class="downvote-btn <%= isDownvoted ? 'active' : '' %>">Downvote</button>
+                            <% } else { %>
+                                <button class="upvote-btn" disabled>Upvote</button>
+                                <p class="vote-count"><%= reply.upvotes %></p>
+                                <button class="downvote-btn" disabled>Downvote</button>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="post-info-bottom">
+                        <div class="post-date">
+                            <%= reply.createdAtSGT %>
+                        </div>
+                        <div class="post-edited">
+                            <% if (reply.edited) { %>
+                            Last Edit: <%= reply.updatedAtSGT %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <%- reply.reply %>
+                </div>
+                <div class="post-content-footer">
+                    <% if (loggedIn) { %>
+                        <% if (reply.poster.id.toString() === userLoggedIn.id.toString()) { %>
+                            <button class="edit-button">Edit</button>
+                            <button class="delete-button">Delete</button>
+                        <% } %>
+                        <% if (reply.poster.id.toString() !== userLoggedIn.id.toString()) { %>
+                            <button class="report-button">
+                                <svg class="report-icon"xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="red" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v6h-2zm0 8h2v2h-2z"/>
+                                </svg> Report
+                            </button>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="reply-section-top">
+        <div class="left-side-buttons">
+            <!-- <a href="#top" id="bot">Go Up</a> -->
+            <a href="#top" id="bot" class="up-arrow-container">
+              <svg class="up-arrow-svg" width="24" height="24" viewBox="0 0 24 24">
+                <path d="M4 12l1.41 1.41L11 7.83v12.34h2V7.83l5.59 5.58L20 12l-8-8-8 8z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+                Go Up
+            </a>
+            <%- include('partials/postPagination.ejs') %>
+        </div>
+    </div>
+    <% if (loggedIn) { %>
+        <div class="reply-section post-container-template">
+            <div id="replyHeader" class="reply-header topic-header">
+                Reply
+            </div>
+            <form id="replyForm">
+                <input type="hidden" name="postId" value="<%= post.id %>"
+                data-page="<%= page %>" data-totalpages="<%= totalPages %>" data-lastlimitreached="<%= lastLimitReached %>" 
+                data-pageitems="<%= replies.length + (page === 1 ? 1 : 0)%>" data-paginationlimit="<%= paginationLimit %>">
+                <div class="reply-area">
+                    <div id="editor-container"></div>
+                    <button type="submit" class="post-button">Post</button>
+                </div>
+            </form>
+        </div>
+    <% } %>
+
+    <div class="modal15">
+        <div class="report-frame">
+            <div class="report-content">
+                <span id="closeReportBtn"class="close">&times;</span>
+                <h2>Report Post</h2>
+                <form id="report-form">
+                    <select id="reason" name="reason">
+                        <option value="">Select a reason</option>
+                        <option value="Disrespectful Behavior">Disrespectful Behavior</option>
+                        <option value="Hate Speech or Offensive Content">Hate Speech or Offensive Content</option>
+                        <option value="Off-Topic Posts">Off-Topic Posts</option>
+                        <option value="Spam or Self-Promotion">Spam or Self-Promotion</option>
+                        <option value="Privacy Violations">Privacy Violations</option>
+                        <option value="Copyright Infringement">Copyright Infringement</option>
+                        <option value="Illegal Activities">Illegal Activities</option>
+                        <option value="Multiple Accounts">Multiple Accounts</option>
+                        <option value="Inappropriate Language or Tone">Inappropriate Language or Tone</option>
+                        <option value="Violation of Guidelines">Violation of Guidelines</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea id="description" name="description" placeholder="Describe your report..."></textarea>
+                    <button type="submit" class="submit-report-button">Submit Report</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/quillEditor.js"></script>
+<script src="js/reply.js"></script>
+<script src="js/voteCount.js"></script>
+<script src="js/edit.js"></script>
+<script src="js/delete.js"></script>
+<script src="js/report.js"></script>

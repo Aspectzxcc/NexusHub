@@ -1,0 +1,149 @@
+<% if (action === 'reports') { %>
+    <div class="content-header">
+        <form class="search-admin-form" action="/admin" method="GET">
+            <input type="hidden" name="action" value="reports">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search..." name="search">
+                <button class="nav-button" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <% if (query) { %>
+        <% filteredData.forEach((report, index) => { %>
+            <div class="category-container admin-container" data-index="<%= index + 1 %>">
+                <div class="category-actions">
+                    <button class="category-button collapse-button"></button>
+                    <div>
+                        <% if (report.status === 'Pending') { %>
+                            <button class="category-button resolve-report-button"
+                                data-id="<%= report._id %>"
+                                data-reporter="<%= report.reporter.username %>"
+                                data-reportedItem="<%= report.reportedItem.item.title %>"
+                                data-reportedItemPoster="<%= report.reportedItem.item.poster.username %>"
+                                data-posterId="<%= report.reportedItem.item.poster._id %>"
+                                data-itemType="<%= report.reportedItem.itemType %>"
+                                data-reason="<%= report.reason %>"
+                                data-description="<%= report.description %>"
+                                data-reportedAt="<%= report.createdAt %>">
+                                Resolve
+                            </button>
+                        <% } %>
+                        <button class="category-button delete-report-button" data-id="<%= report._id %>">Delete</button>  
+                    </div>
+                </div>
+                <ul>
+                    <li style="color: #fff; margin-bottom: 30px;">#<%= index + 1 %></li>
+                    <li>Reporter : <span style="color: #fff;"><%- highlightSubstring(report.reporter.username, query) %></span></li>
+                    <li>Reported Item : <span><%- highlightSubstring(report.reportedItem.item.title, query) %></span></li>
+                    <li>Reported Item Poster : <span style="color: #fff;"><%- highlightSubstring(report.reportedItem.item.poster.username, query) %></span></li>
+                    <li>Reason : <span><%- highlightSubstring(report.reason, query) %></span></li>
+                    <li>Description : <span style="color: #ffffff">"<%- highlightSubstring(report.description, query) %>"</span></li>
+                    <li>Item Type : <span><%- highlightSubstring(report.reportedItem.itemType, query) %></span></li>
+                    <li>Reported At : <span><%= report.createdAt %></span></li>
+                    <% if (report.reportHandledAt) { %>
+                        <li>Handled At : <span><%= report.reportHandledAt %></span></li>
+                    <% } %>
+                    <%
+                        // Define the color variable based on the report status
+                        let color;
+                        switch (report.status) {
+                            case 'Resolved':
+                                color = '#92f075'; // Green color for Resolved status
+                                break;
+                            case 'Dismissed':
+                                color = 'red'; // Red color for Dismissed status
+                                break;
+                            case 'Pending':
+                                color = '#ae9c84'; // #ae9c84 color for Pending status
+                                break;
+                        }
+                    %>
+                    <li>Status : <span style="color: <%= color %>"><%- highlightSubstring(report.status, query) %></span></li>
+                </ul>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <% reports.forEach( (report, index) => { %>
+            <div class="category-container admin-container" data-index="<%= index + 1 %>">
+                <div class="category-actions">
+                    <button class="category-button collapse-button"></button>
+                    <div>
+                        <% if (report.status === 'Pending') { %>
+                            <button class="category-button resolve-report-button"
+                                data-id="<%= report._id %>"
+                                data-reporter="<%= report.reporter.username %>"
+                                data-reportedItem="<%= report.reportedItem.item.title %>"
+                                data-reportedItemPoster="<%= report.reportedItem.item.poster.username %>"
+                                data-posterId="<%= report.reportedItem.item.poster._id %>"
+                                data-itemType="<%= report.reportedItem.itemType %>"
+                                data-reason="<%= report.reason %>"
+                                data-description="<%= report.description %>"
+                                data-reportedAt="<%= report.createdAt %>">
+                                Resolve
+                            </button>
+                        <% } %>
+                        <button class="category-button delete-report-button" data-id="<%= report._id %>">Delete</button>  
+                    </div>
+                </div>
+                <ul>
+                    <li style="color: #fff; margin-bottom: 30px;">#<%= index + 1 %></li>
+                    <li>Reporter : <span style="color: #fff;"><%= report.reporter.username %></span></li>
+                    <li>Reported Item : <span><%= report.reportedItem.item.title %></span></li>
+                    <li>Reported Item Poster : <span style="color: #fff;"><%= report.reportedItem.item.poster.username %></span></li>
+                    <li>Reason : <span><%= report.reason %></span></li>
+                    <li>Description : <span style="color: #ffffff">"<%= report.description %>"</span></li>
+                    <li>Item Type : <span><%= report.reportedItem.itemType %></span></li>
+                    <li>Reported At : <span><%= report.createdAt %></span></li>
+                    <% if (report.reportHandledAt) { %>
+                        <li>Handled At : <span><%= report.reportHandledAt %></span></li>
+                    <% } %>
+                    <%
+                        // Define the color variable based on the report status
+                        let color;
+                        switch (report.status) {
+                            case 'Resolved':
+                                color = '#92f075'; // Green color for Resolved status
+                                break;
+                            case 'Dismissed':
+                                color = 'red'; // Red color for Dismissed status
+                                break;
+                            case 'Pending':
+                                color = '#ae9c84'; // #ae9c84 color for Pending status
+                                break;
+                        }
+                    %>
+                    <li>Status : <span style="color: <%= color %>"><%= report.status %></span></li>
+                </ul>
+            </div>
+        <% }) %>
+    <% } %>
+
+    <div class="modal16">
+        <div class="resolve-report-frame">
+            <span id="closeResolveBtn" class="close">&times;</span>
+            <h2>Resolve Report</h2>
+            <form id="resolveReportForm">
+                <ul id="reportDetails">
+                    <li>Reporter : <span id="reporter"></span></li>
+                    <li>Reported Item : <span id="reportedItem"></span></li>
+                    <li>Reported Item Poster : <span id="reportedItemPoster"></span></li>
+                    <li>Item Type : <span id="itemType"></span></li>
+                    <li>Reason : <span id="reason"></span></li>
+                    <li>Description : <span id="description"></span></li>
+                    <li>Reported At : <span id="reportedAt"></span></li>
+                </ul>
+                <div>
+                    <input type="checkbox" id="banUser" />
+                    <label for="banUser">Ban user</label>
+                </div>
+                <div>
+                    <button type="submit" id="resolveButton">Resolve</button>
+                    <button type="submit" id="dismissButton">Dismiss</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<% } %>
+
+<script src="js/reportActions.js"></script>

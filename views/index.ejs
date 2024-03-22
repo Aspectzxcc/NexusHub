@@ -1,0 +1,123 @@
+<%- include('partials/logo.ejs') %>
+
+<div class="content-container dashed-black-container container-margin">
+  <div class="content-frame">
+    <table>
+      <thead>
+        <tr>
+          <td colspan="5" class="index-subheading">
+            <div class="marquee">
+              Welcome to NexusHub! A Nostalgic Cyberpunk-Themed Ragnarok Forum!
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <% categories.forEach( (category) => { %>
+          <tr>
+            <td id="<%= category.id %>"colspan="5">
+              <%= category.title %>
+            </td>
+          </tr>
+          <tr class="topics">
+            <th colspan="2">Boards</th>
+            <th>Posts</th>
+            <th style="width: 10%;">Replies</th>
+            <th style="width: 10%;">Last Post</th>
+          </tr>
+          <% category.boards.forEach( (board) => { %>
+            <tr>
+              <td class="post-logo">
+                <img src="images/jejeling.gif" alt="icon">
+              </td>
+              <td>
+                <a href="<%= board.href %>"><strong><%= board.title %></strong></a>
+                <p><%= board.description %></p>
+              </td>
+              <td><%= board.postCount %></td>
+              <td><%= board.totalReplyCount %></td>
+              <% if (!board.lastPost) { %>
+                <td style="text-align: center; font-weight: bold; font-size: 20px; color: white;">None</td>
+              <% } else { %>
+              <td>
+                Last post: <a href="<%= board.lastPost.href %>"><%= board.lastPost.createdAtSGT %></a>
+                <br>in <a href="<%= board.lastPost.href %>"><%= board.lastPost.title %></a>
+                <br>by <a href="<%= board.lastPost.poster.href %>">
+                  <%= board.lastPost.poster.username %></a>
+              </td>
+              <% } %>
+            </tr>
+          <% }); %>
+        <% }); %>
+        </tbody>
+    </table>
+  </div>
+  <br><br>
+  <div class="info-center-header">
+    <span>NexusHub Forum - Info Center</span>
+    <button class="accordion-button active"></button>
+  </div>
+  <div class="info-center-frame">
+    <div>
+      Recent Posts
+    </div>
+    <table>
+      <thead>
+        <tr class="topics">
+          <th colspan="2">Subject</th>
+          <th>Started By</th>
+          <th>Board</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% latestPosts.forEach( (post) => { %>
+          <tr>
+            <td class="post-logo">
+              <img src="images/angeling.gif" alt="icon">
+            </td>
+            <td>
+              <a href="<%= post.href %>"><strong><%= post.title %></strong></a>
+            </td>
+            <td>
+              <a href="<%= post.poster.href %>"><%= post.poster.username %></a>
+            </td>
+            <td>
+              <a href="<%= post.refBoard.href %>"><%= post.refBoard.title %></a>
+            </td>
+            <td>
+              <span><%= formatLatestPostDate(post) %></span>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <div>
+      Forum Stats
+    </div>
+    <p>
+      <span style="color: #fff"><%= postCount %></span> Posts and <span style="color: #fff"><%= replyCount %></span> Replies by 
+      <span style="color: #fff"><%= userCount %></span> Members - Latest Member:
+      <a href="<%= users[users.length - 1].href %>">
+        <%= users[users.length - 1].username %>
+      </a>
+      <br>
+      Latest Post:
+      <a href="<%= posts[posts.length - 1].href %>">
+        <%= posts[posts.length - 1].title %>
+      </a>
+      (<span style="color: #fff"><%= formatLatestPostDate(posts[posts.length-1]) %></span>)
+    </p>
+    <div>
+      Users Online
+    </div>
+    <p>
+      <span style="color: #fff">Online: 10 Guests, 1 User</span>
+      - Most Online Today: <span style="color: #fff">16</span> - Most Online Ever: <span style="color: #fff">34</span> (<span style="color: #fff">Feb 01, 2024 09:23 PM</span>)
+      <br>
+      Users active in past 15 minutes: <a href="<%= users[0].href %>"><%= users[0].username %></a>
+    </p>
+  </div>
+</div>
+
+<script src="js/accordion.js"></script>

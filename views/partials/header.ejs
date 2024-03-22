@@ -1,0 +1,72 @@
+<header>
+  <% if (loggedIn) { %>
+  <div>
+    <a href="https://www.youtube.com/watch?v=BqijsweJzFQ&ab_channel=ScarliUwU" target="_blank">
+      <img class="spin-img" alt="spinning-disk" src="images/pixel-disk.png" style="width: 100px; height: 100px;">
+    </a>
+
+    <nav class="cyberpunk-nav">
+      <ul class="nav-list">
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropbtn">Menu ▼</a>
+          <div class="dropdown-content">
+            <a href="<%= userLoggedIn.href %>">Profile</a>
+            <a href="/user/posts=<%= userLoggedIn.id %>">My Posts</a>
+            <a href="/user/replies=<%= userLoggedIn.id %>">My Replies</a>
+            <a href="/user/update=<%= userLoggedIn.id %>">Update Profile</a>
+            <% if (loggedIn && userLoggedIn.role === 'Forum Master') { %>
+              <a href="/admin">Master Area</a>
+            <% } %>
+            <a href="/logout" id="logoutLink">Log out</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+  <nav class="navbar-logged-in">
+    <a id="home" href="/">
+      <img src="images/button-home.gif">  
+    </a>
+    <a id="members" href="/user/all">
+      <img src="images/button-users.gif">
+    </a>
+    <a id="search" href="#">
+      <img src="images/button-search.gif">  
+    </a>
+  </nav>
+
+  <div>
+    <a href="#">
+      <img class="music-button" alt="sounds" src="images/pixel-speaker2.gif" style="width: 100px; height: 100px;">
+      <audio class="sound-effect" src="sound/ragnarokbg.mp3" preload="auto"></audio>
+    </a>
+  </div>
+  <% } else { %>
+  <div>
+    <a href="https://www.youtube.com/watch?v=BqijsweJzFQ&ab_channel=ScarliUwU" target="_blank">
+      <img class="spin-img" alt="spinning-disk" src="images/pixel-disk.png" style="width: 100px; height: 100px;">
+    </a>
+  </div>
+  <nav>
+    <a id="home" href="/">
+      <img src="images/button-home.gif">  
+    </a>
+    <a id="register" href="#">
+      <img src="images/button-register.gif">  
+    </a>
+    <a id="login" href="#">
+      <img src="images/button-login.gif">  
+    </a>
+    <a id="search" href="#">
+      <img src="images/button-search.gif">  
+    </a>
+  </nav>
+  <div>
+    <a href="#">
+      <img class="music-button" alt="sounds" src="images/pixel-speaker2.gif" style="width: 100px; height: 100px;">
+      <audio class="sound-effect" src="sound/ragnarokbg.mp3" preload="auto"></audio>
+    </a>
+  </div>
+  <% } %>
+</header>

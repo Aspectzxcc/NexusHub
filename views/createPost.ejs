@@ -1,0 +1,27 @@
+<%- include('partials/logo.ejs') %>
+
+<div class="content-container dashed-black-container container-margin">
+    <div class="profile-container post-container-template">
+      <div class="profile-header topic-header">
+        Create Post
+      </div>
+      <form class="create-post-form">
+        <div class="form-group">
+          <label for="post-subject">Subject:</label>
+          <input type="text" id="post-subject" name="post-subject" required placeholder="Enter the post subject..." class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="post-content">Content:</label>
+          <div class="create-post-block">
+            <div id="create-post-container"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="post-submit-btn">Post</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<script src="js/quillEditor.js"></script>
+<script src="js/post.js"></script>

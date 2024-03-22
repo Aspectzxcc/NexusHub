@@ -1,0 +1,103 @@
+<%- include('partials/logo.ejs') %>
+
+<div class="content-container dashed-black-container container-margin">
+  <div class="directory-bar">
+    <a href="/">NexusHub Forum</a> 
+    <span>&gt;</span>
+    <a href="/#<%= board.category.id %>"><%= board.category.title %></a>
+    <span>&gt;</span>
+    <a href="<%= board.href %>"><%= board.title %></a>
+  </div>
+  <div class="content-frame">
+    <table>
+      <thead>
+        <tr class="boards-header">
+          <td colspan="5"><%= board.title %></td>
+        </tr>
+        <tr>
+          <td colspan="5" class="index-subheading">
+            <%= board.innerDescription %>
+          </td>
+        </tr>
+        <tr class="topics">
+          <th colspan="2">Subject</th>
+          <th>Started By</th>
+          <th style="width: 10%">Replies</th>
+          <th style="width: 10%">Views</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let i = 0; i < posts.length; i++) { %>
+          <tr class="<%= posts[i].pinnedClass %>">
+            <td class="post-logo">
+              <% const imageSource = !posts[i].pinned ? 'images/book.gif' : 'images/candy-pin.gif'; %>
+              <img src="<%= imageSource %>" alt="<%= !posts[i].pinned ? 'book gif' : 'candy pin gif'%>" />
+            </td>
+            <td>
+              <a href="<%= posts[i].href %>"><strong><%= posts[i].title %></strong>
+                </a>
+              <p><%= posts[i].createdAtSGT %></p>
+            </td>
+            <td class="center-table-data">
+              <div class="username">
+                <a href="<%= posts[i].poster.href %>">
+                  <%= posts[i].poster.username %>
+                  </a>
+              </div>
+              <div class="role <%= posts[i].poster.roleClass %>">
+                <%= posts[i].poster.role %>
+              </div>
+            </td>
+            <td class="center-table-data"><%= posts[i].replyCount %></td>
+            <td class="center-table-data"><%= posts[i].views %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    
+    <div class="create-post-button-container">
+      <% if (loggedIn) { %>
+        <% if (title === 'Forum FAQs & Announcements') { %>
+          <% if (userLoggedIn.role === 'Forum Master') { %>
+            <a href="<%= board.href %>/create" class="create-post-button">Create Post</a>
+          <% } %>
+        <% } else { %>
+            <a href="<%= board.href %>/create" class="create-post-button">Create Post</a>
+        <% } %>
+      <% } %>
+    </div>
+    <div class="navigation-buttons" style="margin-bottom: 10px">
+      <div class="pagination">
+        <% if (page !== 1 && page !== 2) { %>
+          <a class="page-button" href="<%= board.href %>">«</a>
+      <% } %>
+        <% for(let i = page - 1; i <= page + 1; i++) { %>
+          <% if (i !== 0 && i !== totalPages + 1) { %>
+              <a class="page-button <%= i === page ? 'currentPage' : '' %>" href="<%= board.href %>?page=<%= i %>">
+              <%= i %>
+              </a>
+          <% } %>
+      <% } %>
+      <% if (page !== totalPages && page !== totalPages - 1) { %>
+        <a class="page-button" href="<%= board.href %>?page=<%= totalPages %>">»</a>
+    <% } %>
+      </div>
+    </div>
+
+    <div class="legend-frame">
+      <table>
+        <tbody>
+          <tr>
+            <td><img src="../images/book.gif" alt="book gif"/></td>
+            <td>Content</td>
+          </tr>
+          <tr>
+            <td><img src="../images/candy-pin.gif" alt="candy pin gif" /></td>
+            <td>Important</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
